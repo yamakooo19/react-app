@@ -1,23 +1,30 @@
-import React, { createContext, useContext } from 'react'
+import { useReducer } from "react";
 
-const Context = createContext({money: 0});
+const initialState = {count: 0};
 
-const Mago = () => {
-  const { money } = useContext(Context)
-  return <p>{money}円</p>
+function reducer(state: {count: number}, action: {type: string}) {
+  switch (action.type) {
+    case 'increment':
+      return {count: state.count + 1};
+    case 'decrement':
+      return {count: state.count - 1};
+    default:
+      throw new Error();
+  }
 }
 
-const Kodomo = () => <Mago />
-
-const Oya = () => {
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, initialState);
   return (
-    <Context.Provider value={{ money: 10000 }}>
-      <Kodomo />
-    </Context.Provider>
-  )
+    <>
+      Count: {state.count}
+      <button onClick={() => dispatch({type: 'decrement'})}>-</button>
+      <button onClick={() => dispatch({type: 'increment'})}>+</button>
+    </>
+  );
 }
 
-const Example = Oya;
+const Example = Counter;
 
 
 
